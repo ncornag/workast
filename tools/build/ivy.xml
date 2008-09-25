@@ -1,0 +1,107 @@
+<ivy-module version="1.0" xmlns:m="http://ant.apache.org/ivy/maven">
+    
+    <info organisation="es.workast" module="workast" status="integration" />
+    
+    <configurations>
+        <conf name="global" />
+        <conf name="web" extends="global"/>
+        <conf name="provided"/>
+        <conf name="test"/>
+    </configurations>
+    
+    <publications>
+        <artifact name="workast" type="jar" conf="web" />
+    </publications>
+    
+    <dependencies defaultconf="web->runtime">
+    	
+        <!-- Spring Core -->
+        <dependency org="org.springframework" name="org.springframework.core" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.beans" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.aop" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.context" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.context.support" rev="2.5.5.A" />
+        <!-- Spring JMS support
+        <dependency org="org.springframework" name="org.springframework.jms" rev="2.5.5.A" />
+         -->
+    
+        <!-- Spring Security -->
+        <dependency org="org.springframework.security" name="org.springframework.security" rev="2.0.2.A" />
+        <dependency org="org.springframework.security" name="org.springframework.security.acls" rev="2.0.2.A" />
+        <dependency org="org.springframework.security" name="org.springframework.security.annotation" rev="2.0.0.A" />
+        <dependency org="org.springframework.security" name="org.springframework.security.taglibs" rev="2.0.2.A" />
+        <dependency org="org.springframework.security" name="org.springframework.security.ui.ntlm" rev="2.0.0.A" />
+                
+        <!-- Spring Integration
+        <dependency org="org.springframework.integration" name="org.springframework.integration" rev="1.0.0.M4" />
+        <dependency org="org.springframework.integration" name="org.springframework.integration.adapter" rev="1.0.0.M4" />
+        <dependency org="org.springframework.integration" name="org.springframework.integration.ws" rev="1.0.0.M4" />
+         -->
+        <!--  AspectJ -->
+        <dependency org="org.aspectj" name="com.springsource.org.aspectj.runtime" rev="1.6.1" />
+        <dependency org="org.aspectj" name="com.springsource.org.aspectj.weaver" rev="1.6.1" />
+        
+        <!-- Log4j -->
+        <dependency org="org.apache.log4j" name="com.springsource.org.apache.log4j" rev="1.2.15" />
+        
+        <!-- Quartz 
+        <dependency org="com.opensymphony.quartz" name="com.springsource.org.quartz" rev="1.6.0" />
+        -->
+        <!-- Groovy
+        <dependency org="org.codehaus.groovy" name="com.springsource.org.codehaus.groovy" rev="1.5.1" />
+         -->
+        
+        <!-- Database -->
+        <dependency org="org.springframework" name="org.springframework.jdbc" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.orm" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.transaction" rev="2.5.5.A" />
+        <dependency org="javax.transaction"   name="com.springsource.javax.transaction" rev="1.1.0" />
+        <dependency org="javax.persistence"   name="com.springsource.javax.persistence" rev="1.0.0" />        
+        <dependency org="org.apache.commons"  name="com.springsource.org.apache.commons.dbcp" rev="1.2.2.osgi" />
+        <dependency org="org.hibernate"       name="com.springsource.org.hibernate" rev="3.2.6.ga" />
+        <dependency org="org.hibernate"       name="com.springsource.org.hibernate.annotations" rev="3.3.0.ga" />
+        <dependency org="com.mysql.jdbc"      name="com.springsource.com.mysql.jdbc" rev="5.1.6" />
+        <!-- 
+        <dependency org="net.sf.ehcache"      name="ehcache" rev="1.5.0" />
+         -->
+        <!--  HSQL 
+        <dependency org="org.hsqldb" name="com.springsource.org.hsqldb" rev="1.8.0.9" />
+        -->
+        <!-- Oracle
+        <dependency org="com.oracle" name="ojdbc14" rev="10.2.0.3.0" conf="web->master"/>
+         -->
+        
+        <!-- Web -->
+        <dependency org="org.springframework" name="org.springframework.web" rev="2.5.5.A" />
+        <dependency org="org.springframework" name="org.springframework.web.servlet" rev="2.5.5.A" />
+        <dependency org="org.apache.taglibs"  name="com.springsource.org.apache.taglibs.standard" rev="1.1.2" />
+        <dependency org="javax.servlet"       name="com.springsource.javax.servlet.jsp.jstl" rev="1.1.2" />
+
+		<!-- Validation 
+        <dependency org="net.sf.oval" name="oval" rev="1.2" conf="web->master" />
+        -->
+        
+        <!-- Velocity -->
+        <dependency org="org.apache.velocity" name="com.springsource.org.apache.velocity" rev="1.5.0"/>
+
+        <!-- Resteasy (JAX-RS) -->
+        <dependency org="org.jboss.resteasy" name="resteasy-jaxrs" rev="1.0-beta-8" conf="web->runtime,master"/>
+
+        <!-- test-time only dependencies -->
+        <dependency org="org.junit" name="com.springsource.org.junit" rev="4.4.0" conf="test->runtime" />
+        <dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime"/>
+        <dependency org="org.springframework" name="org.springframework.test" rev="2.5.5.A" conf="test->runtime"/>
+        <!-- Selenium!
+        <dependency org="com.thoughtworks" name="com.thoughtworks.selenium" rev="0.9.2" conf="test->runtime"/>
+         -->
+
+        <!-- build-time only dependencies -->
+        <dependency org="javax.servlet" name="com.springsource.javax.servlet" rev="2.4.0" conf="provided->provided"/>
+
+        <exclude type="license" ext="txt" />
+        <exclude type="src" ext="jar"/>
+        <exclude type="library" ext="libd"/>    
+        
+    </dependencies>
+    
+</ivy-module>

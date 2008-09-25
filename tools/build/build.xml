@@ -1,0 +1,267 @@
+<project name="workast" default="" xmlns:ivy="antlib:org.apache.ivy.ant">
+
+    <property file="${user.home}/build.properties"/>  <!-- propiedades del usuario --> 
+    <property file="build.properties"/>   		      <!-- propiedades por defecto -->
+    
+    <echo>Local repo: ${ivy.local.root}</echo>
+    <echo>Shared repo: ${ivy.shared.root}</echo>
+    
+    <target name="load-ivy">
+        <path id="ivy.lib.path">
+            <fileset dir="./${ivy.jar.dir}" includes="*.jar" />
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+        <ivy:settings file="ivysettings.xml" override="true" />
+    </target>
+    
+    <path id="lib.path.id">
+        <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    </path>
+    <path id="junit.path.id">
+        <fileset dir="../junit" includes="**/*.jar"/>
+    </path>
+    <path id="test.path.id">
+        <pathelement location="${test.classes.dir}" />
+        <pathelement location="${test.resources.dir}"/>
+        <pathelement location="${test.src.dir}"/>
+        <pathelement location="${classes.dir}"/>
+        <pathelement location="${resources.dir}"/>
+        <pathelement location="${src.dir}"/>
+        <path refid="lib.path.id"/>
+    </path>
+    
+    <!-- ================================= 
+          target: resolve              
+         ================================= -->
+    <target name="resolve" depends="load-ivy" description="--> resolve and retrieve dependencies with ivy">
+        <mkdir dir="${lib.dir}" />
+        <!-- not usually necessary, ivy creates the directory IF there are dependencies -->
+
+        <!-- the call to resolve is not mandatory, retrieve makes an implicit call if we don't -->
+        <ivy:resolve file="${basedir}/ivy.xml" />
+        <ivy:retrieve pattern="${lib.dir}/${lib.pattern}" conf="${lib.conf}" />
+        <ivy:retrieve pattern="${compile.lib.dir}/${compile.lib.pattern}" conf="${compile.lib.conf}" />
+    </target>
+    
+    <!-- ================================= 
+          target: report              
+         ================================= -->
+    <target name="report" depends="resolve" description="--> generates a report of dependencies">
+        <ivy:report todir="${build.dir}/reports" />
+    </target>
+
+    <!-- ================================= 
+          target:               
+         ================================= -->
+    <target name="ivy-new-version" depends="load-ivy" unless="ivy.new.revision">
+        <!-- default module version prefix value -->
+        <property name="module.version.prefix" value="${module.version.target}-dev-b" />
+
+        <!-- asks to ivy an available version number -->
+        <ivy:info file="${basedir}/ivy.xml" />
+        <ivy:buildnumber organisation="${ivy.organisation}" module="${ivy.module}" revision="${module.version.prefix}" defaultBuildNumber="1" revSep="" />
+    </target>
+
+    <!-- ================================= 
+          target:               
+         ================================= -->
+    <target name="local-version">
+        <tstamp>
+            <format property="now" pattern="yyyyMMddHHmmss" />
+        </tstamp>
+        <property name="ivy.new.revision" value="${module.version.target}-local-${now}" />
+    </target>
+
+    <!-- ================================= 
+          target:               
+         ================================= -->
+    <target name="version" depends="ivy-new-version">
+        <!-- create version file in classpath for later inclusion in jar -->
+        <mkdir dir="${classes.dir}" />
+        <echo message="version=${ivy.new.revision}" file="${classes.dir}/${ant.project.name}.properties" append="false" />
+
+        <!-- load generated version properties file -->
+        <property file="${classes.dir}/${ant.project.name}.properties" />
+    </target>
+
+    <!-- ================================= 
+          target: compile              
+         ================================= -->
+    <target name="compile" depends="resolve" description="--> compile the project">
+        <mkdir dir="${classes.dir}" />
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.path.id" debug="true"/>
+    </target>
+
+    <!-- ================================= 
+          target: jar              
+         ================================= -->
+    <target name="jar" depends="version, compile" description="--> make the jar file for this module">
+        <jar destfile="${jar.file}">
+            <fileset dir="${classes.dir}"  />
+            <fileset dir="${resources.dir}" />
+            <fileset dir="${web.dir}" />
+            <fileset dir="${src.dir}" >
+                <exclude name="**/*.java"/>
+            </fileset>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}" />
+                <attribute name="Build-Version" value="${version}" />
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- ================================= 
+          target: compile-tests              
+         ================================= -->
+    <target name="compile-tests" depends="compile" description="--> compile the tests">
+        <mkdir dir="${test.classes.dir}" />
+        <javac srcdir="${test.src.dir}" destdir="${test.classes.dir}" debug="true" >
+	        <classpath>
+	            <pathelement location="${classes.dir}"/>
+	            <path refid="lib.path.id"/>
+	    	</classpath>
+	    </javac>
+    </target>
+
+    <!-- ================================= 
+          target: publish              
+         ================================= -->
+    <target name="publish" depends="clean-build, jar" description="--> publish this project in the ivy repository">
+        <ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" resolver="shared" pubrevision="${version}" status="release" />
+        <echo message="project ${ant.project.name} released with version ${version}" />
+    </target>
+
+    <!-- ================================= 
+          target: publish-local              
+         ================================= -->
+    <target name="publish-local" depends="local-version, jar" description="--> publish this project in the local ivy repository">
+        <ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" resolver="local" pubrevision="${version}" pubdate="${now}" status="integration" forcedeliver="true" />
+        <echo message="project ${ant.project.name} published locally with version ${version}" />
+    </target>
+
+    <!-- ================================= 
+          target: clean-local              
+         ================================= -->
+    <target name="clean-local" description="--> cleans the local repository for the current module">
+        <delete dir="${ivy.local.root}/${ant.project.name}" />
+    </target>
+
+    <!-- ================================= 
+          target: clean-lib              
+         ================================= -->
+    <target name="clean-lib" description="--> clean the project libraries directory (dependencies)">
+        <mkdir dir="${lib.dir}"/>
+        <mkdir dir="${compile.lib.dir}"/>
+        <delete verbose="true">
+            <fileset dir="${lib.dir}">
+                <exclude name="**/.svn/**"/>
+                <include name="**/*"/>
+            </fileset>
+            <fileset dir="${compile.lib.dir}">
+                <exclude name="**/.svn/**"/>
+                <include name="**/*"/>
+            </fileset>
+        </delete>
+    </target>    
+
+    <!-- ================================= 
+          target: clean-build              
+         ================================= -->
+    <target name="clean-build" description="--> clean the project built files">
+        <mkdir dir="${build.dir}"/>
+        <delete includeemptydirs="true" dir="${build.dir}" />
+    </target>
+
+    <!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean" depends="clean-build,clean-lib" description="--> clean the project" />
+
+    <!-- ================================= 
+          target: javadoc                
+         ================================= -->
+    <target name="javadoc" description="--> generates the java javadocs">
+        <delete dir="${build.dir}/javadoc"/>
+        <javadoc sourcepath="${src.dir}" destdir="${build.dir}/javadoc"  
+            packagenames="*." 
+            classpath="${src.dir}" 
+            classpathref="lib.path.id"
+            defaultexcludes="yes"
+            use="true" author="true" version="true" access="protected">
+            <link href="http://java.sun.com/javase/6/docs/api/"/>
+            <link href="http://static.springframework.org/spring-batch/apidocs/"/>
+            <link href="http://static.springframework.org/spring/docs/2.5.x/api/"/>
+       </javadoc>
+    </target>
+
+    <!-- ================================= 
+          target: run & report unit tests                
+         ================================= -->
+    <target name="unit-tests" depends="compile-tests" description="--> run unit tests and report">
+
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="junit.path.id"/>
+        
+        <echo message="Running unit tests from ${test.classes.dir} to ${test.reports.dir}" />
+        <mkdir dir="${test.reports.dir}" />
+		
+        <do-junit include="**/*Test.class" />
+
+    </target>
+    
+    <!-- ================================= 
+          target: run & report functional tests depends="compile-tests"                  
+         ================================= -->
+    <target name="functional-tests" depends="compile-tests" description="--> run functional tests and report">
+
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="junit.path.id"/>
+        
+        <echo message="Running functional tests from ${test.classes.dir} to ${test.reports.dir}" />
+        <mkdir dir="${test.reports.dir}" />
+		
+        <do-junit include="**/*FunctionalTests.class" exclude="**/*StressFunctionalTests.class"/>
+
+    </target>
+  
+	<!-- ================================= 
+	          target: run & report unit tests                
+	         ================================= -->
+	<target name="context-test" depends="compile-tests" description="--> run tests context">
+
+		<taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" classpathref="junit.path.id"/>
+	        
+	     <echo message="Running unit tests from ${test.classes.dir} to ${test.reports.dir}" />
+	    <mkdir dir="${test.reports.dir}" />
+			
+		<do-junit include="**/*ContextTests.class"/>
+
+	</target>
+	
+    <!-- junit macro -->
+    <macrodef name="do-junit">
+        <attribute name="include" default="**/*Test.class" />
+        <attribute name="exclude" default="*.exclude" />
+        <sequential>
+            <junit showoutput="true" printsummary="yes" fork="yes" forkmode="once" tempdir="${build.dir}">
+                <formatter type="xml" />
+                <formatter type="brief" usefile="false" />
+                <batchtest todir="${test.classes.dir}">
+                    <fileset dir="${test.classes.dir}">
+                        <include name="@{exclude}" />
+                        <include name="@{include}" />
+                    </fileset>
+                </batchtest>
+				<classpath refid="test.path.id"/>
+                <jvmarg value="-Duser.language=es" />
+                <jvmarg value="-Duser.region=ES" />
+                <jvmarg value="-ea" />
+            </junit>
+            <junitreport todir="${test.reports.dir}">
+                <fileset dir="${test.classes.dir}">
+                    <include name="TEST-*.xml" />
+                </fileset>
+                <report format="frames" todir="${test.reports.dir}/html" />
+            </junitreport>
+        </sequential>
+    </macrodef>
+    
+</project>

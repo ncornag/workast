@@ -1,0 +1,7 @@
+1. Run the script "resources/sql/mysql/dbschema.sql" agaist the MySQL database as "root" 
+2. Run the resources/sql/mysql/data.sql agaist the database
+3. Modify db.properties
+4. Run the "resolve" ANT target
+5. Copy "tools/tomcat/endorsed/*.*" dir to "%TOMCAT_HOME%/endorsed"
+6. Run the application in  the tomcat server inside eclipse WTP
+7. Go to http://localhost:8080/workast/stream.htm

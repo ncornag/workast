@@ -1,0 +1,24 @@
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    
+    <entry key="status.title">${owner.name} ${status}</entry>
+    <entry key="status.icon">img/iconStatus.png</entry>
+    
+    <entry key="link.title">${owner.name} ha publicado un enlace: &lt;a href='${linkUrl}'&gt;${linkTitle}&lt;/a&gt;</entry>
+    <entry key="link.body">${notes}</entry>
+    <entry key="link.icon">img/iconLink.png</entry>
+
+    <entry key="joingroup.title">${owner.name} se unió al grupo &lt;a href="${groupUrl}"&gt;${groupName}&lt;/a&gt;</entry>
+    <entry key="joingroup.icon">img/iconJoinGroup.png</entry>
+    
+    <entry key="delicious.title">${owner.name} guardó &lt;a href="${linkUrl}"&gt;${linkTitle}&lt;/a&gt; en &lt;a href="http://delicious.com"&gt;del.icio.us&lt;/a&gt;</entry>
+    <entry key="delicious.icon">img/iconDelicious.png</entry>
+    
+    <entry key="reader.title">${owner.name} compartió &lt;a href="${linkUrl}"&gt;${linkTitle}&lt;/a&gt; en &lt;a href="http://reader.google.com"&gt;Google Reader&lt;/a&gt;</entry>
+    <entry key="reader.icon">img/iconReader.png</entry>
+    
+    <entry key="note.title">${owner.name} escibió</entry>
+    <entry key="note.body">${notes}</entry>
+    <entry key="note.icon">img/iconNote.png</entry>
+    
+</properties>

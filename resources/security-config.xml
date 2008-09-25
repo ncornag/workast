@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+    xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+               http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+               http://www.springframework.org/schema/security
+               http://www.springframework.org/schema/security/spring-security-2.0.xsd">
+    
+    <http auto-config="true">
+        <intercept-url pattern="/login*"   filters="none" />
+        <intercept-url pattern="/logout*"  filters="none" />
+        <intercept-url pattern="/js/**"    filters="none" />
+        <intercept-url pattern="/img/**"   filters="none" />
+        <intercept-url pattern="/css/**"   filters="none" />
+        <intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+        <intercept-url pattern="/**"       access="ROLE_USER" />
+        <form-login login-page="${security.loginPage}" 
+                    default-target-url="${security.default-target-url}" 
+                    always-use-default-target="true"
+                    authentication-failure-url="${security.authentication-failure-url}" />
+    </http>
+<!-- 
+        <logout logout-url="${security.logout-url}" 
+                logout-success-url="${security.logout-success-url}" />
+                    login-processing-url="${security.login-processing-url}" 
+ -->
+    
+    <authentication-provider user-service-ref="userService">
+        <!-- 
+        <password-encoder hash="sha"/> | <password-encoder hash="md5"/>
+         -->
+    </authentication-provider>
+
+    <!-- Normal datasource User Service
+    <jdbc-user-service id="userService" data-source-ref="dataSource" />
+     -->
+    
+    <!-- Custom jdbc User Service 
+    -->
+    <jdbc-user-service id="userService" 
+            data-source-ref="dataSource"
+            users-by-username-query="SELECT username, password, true FROM Person WHERE username=?"
+            authorities-by-username-query="SELECT p.username, a.authority FROM Person p, Authority a WHERE p.id = a.personId AND p.username=?" />
+    
+    <!-- Custom User Service 
+    <beans:bean id="userService" class="es.workast.security.UserDetailsService"/>
+    -->
+    
+    <!-- In memory User Service 
+    <user-service id="userService">
+        <user name="ncornag" password="ncornag" authorities="ROLE_ANONYMOUS, ROLE_USER, ROLE_ADMIN" />
+        <user name="elecampos" password="elecampos" authorities="ROLE_ANONYMOUS, ROLE_USER" />
+    </user-service>
+    -->
+    
+</beans:beans>
