@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd"
+    default-autowire="byName">
+    
+    <!--
+        Configurer that replaces ${...} placeholders with values from a properties file 
+        & properties accesor to be injected in the services 
+    -->
+    <bean id="appProperties" class="es.workast.utils.RecursivePropertiesFactoryBean"
+          p:ignoreUnresolvablePlaceholders="true" p:order="10" lazy-init="false" 
+          p:systemPropertiesModeName="SYSTEM_PROPERTIES_MODE_OVERRIDE"
+          p:ignoreResourceNotFound="true">
+        <property name="locations">
+            <list>
+                <value>classpath:properties/default.properties</value>
+                <value>classpath:properties/db.properties</value>
+                <value>classpath:properties/messages_en.properties</value>
+                <value>${configFile}</value> <!-- ie.: java -DconfigFile=file:///Users/ncornagl/workast.properties -->
+            </list>
+        </property>
+        <property name="localOverride" value="true" />
+    </bean>
+    
+    <!--
+        Activates various annotations to be detected in bean classes: Spring's
+        @Required and @Autowired, as well as JSR 250's @PostConstruct,
+        @PreDestroy and @Resource (if available) and JPA's @PersistenceContext
+        and @PersistenceUnit (if available).
+    -->
+    <context:annotation-config/>
+    
+    <!--
+        The controllers are autodetected POJOs labeled with the @Controller annotation.
+        DefaultAnnotationHandlerMapping is driven by these annotations and is 
+        enabled by default with Java 5+:
+    -->
+    <context:component-scan base-package="es.workast" scoped-proxy="targetClass" />
+
+    <!-- Persistence -->
+    <import resource="persistence-config.xml"/>
+    
+    <!-- Security -->
+    <import resource="security-config.xml"/>
+
+    <!-- Timers -->
+    <bean id="activityCacheEvictorBean" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject" ref="activityCache"/>
+        <property name="targetMethod" value="cleanCache"/>
+    </bean>
+
+    <bean id="activityCacheEvictorTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="0"/>
+        <property name="period" value="3600000"/> <!-- (1000 * 60 * 60) EveryHour -->
+        <property name="timerTask" ref="activityCacheEvictorBean"/>
+    </bean>
+
+    <bean id="pendingPasswordEraserBean" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject" ref="pendingPasswordDao"/>
+        <property name="targetMethod" value="deletePendingPasswordSinceLastMonth"/>
+    </bean>
+
+    <bean id="pendingPasswordEraserTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="0"/>
+        <property name="period" value="86400000"/> <!-- (1000 * 60 * 60 * 24) Everyday -->
+        <property name="timerTask" ref="pendingPasswordEraserBean"/>
+    </bean>
+
+    <bean id="fileManagerEvictorBean" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean">
+        <property name="targetObject" ref="fileManager" />
+        <property name="targetMethod" value="evictFiles" />
+    </bean> 
+    
+    <bean id="fileManagerEvictorTask" class="org.springframework.scheduling.timer.ScheduledTimerTask">
+        <property name="delay" value="60000" />
+        <property name="period" value="${fileManager.pendingFiles.evictingInterval}" />
+        <property name="timerTask" ref="fileManagerEvictorBean" />
+    </bean>       
+    
+    <bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean">
+        <property name="scheduledTimerTasks">
+            <list>
+                <ref bean="fileManagerEvictorTask" />
+                <ref bean="activityCacheEvictorTask"/>
+                <ref bean="pendingPasswordEraserTask"/>
+            </list>
+        </property>
+    </bean>    
+    
+    <!-- Velocity render engine -->
+    
+    <bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+        <property name="velocityProperties">
+            <value>
+                resource.loader=class
+                class.resource.loader.class=org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+            </value>
+        </property>
+    </bean>
+    
+    <!-- Mail Manager -->
+    
+    <bean id="mailManager" class="es.workast.utils.mail.MailManagerImpl">
+        <property name="velocityEngine" ref="velocityEngine"/>
+        <property name="host" value="${mailManager.host}" />
+        <property name="port" value="${mailManager.port}"/>
+    </bean>
+        
+</beans>

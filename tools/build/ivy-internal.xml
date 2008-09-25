@@ -1,0 +1,23 @@
+<ivy-module version="1.0" xmlns:m="http://ant.apache.org/ivy/maven">
+
+    <info organisation="es.workast" module="workast" status="integration" />
+
+    <configurations>
+        <conf name="global" />
+        <conf name="ext" extends="global"/>
+    </configurations>
+
+    <dependencies defaultconf="ext->runtime">
+
+        <!-- Tomcat deployer -->
+        <dependency org="tomcat" name="catalina-ant" rev="5.5.23" conf="ext->master">
+            <exclude org="ant" name="ant"/>
+            <exclude org="tomcat" name="catalina"/>
+            <exclude org="commons-modeler" name="commons-modeler"/>
+            <exclude org="commons-digester" name="commons-digester"/>
+            <exclude org="commons-logging" name="commons-logging-api"/>
+            <exclude org="mx4j" name="mx4j-jmx"/>
+            <exclude org="xml-apis" name="xml-apis"/>
+        </dependency>
+    </dependencies>
+</ivy-module>

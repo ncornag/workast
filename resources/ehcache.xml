@@ -1,0 +1,40 @@
+<ehcache>
+  <diskStore path="java.io.tmpdir"/>
+  <defaultCache
+      maxElementsInMemory="10000"
+      eternal="false"
+      overflowToDisk="false"
+      timeToIdleSeconds="300"
+      timeToLiveSeconds="300"
+      diskPersistent="false"
+      diskExpiryThreadIntervalSeconds="120"
+      memoryStoreEvictionPolicy="LRU"/>
+      
+  <cache name="org.hibernate.cache.StandardQueryCache"
+      maxElementsInMemory="100"
+      eternal="false"
+      timeToIdleSeconds="120"
+      timeToLiveSeconds="120"
+      overflowToDisk="false"/>
+  
+  <cache name="org.hibernate.cache.UpdateTimestampsCache"
+      maxElementsInMemory="5000"
+      timeToIdleSeconds="120"
+      timeToLiveSeconds="120"
+      eternal="true"/>
+
+   <cache name="es.workast.model.fileupload.AttachmentFile"     maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.person.Person"                 maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.group.Group"                   maxElementsInMemory="1000"  timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.activity.Activity"             maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.activity.ActivityTag"          maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.tag.Tag"                       maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.group.Group.members"           maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.activity.Activity.tags"        maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.activity.Activity.comments"    maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.person.Person.followers"       maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.person.Person.following"       maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+   <cache name="es.workast.model.person.Person.groups"          maxElementsInMemory="1000" timeToLiveSeconds="600" eternal="false" overflowToDisk="false"/>
+
+
+</ehcache>

@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* CSS Document */
+
+a:link {color: #869aae;	text-decoration: none;}
+a:visited {	text-decoration: none;	color: #869aae;}
+a:hover {	text-decoration: none;	color: #e5257b;}
+a:active {	text-decoration: none;	color: #e5257b;}
+
+/*------------------------------------------------------------*
+ ~Headings ~
+**------------------------------------------------------------*/
+h1{color: #e5257b;}
+h2{color: #e5257b;}
+h3{color: #e5257b;}
+h4{color: #e5257b;}
+
+/*------------------------------------------------------------*
+ ~main layout bits~
+**------------------------------------------------------------*/
+#top {background-color: #e5257b;}
+#main_line {background-color: #e5257b;}
+
+/*------------------------------------------------------------*
+ ~Tabbed Nav Information~
+**------------------------------------------------------------*/
+#nav li { background-color: #e5257b;}
+
+/*------------------------------------------------------------*
+ ~ Content Information~
+**------------------------------------------------------------*/
+input, textarea{color: #e5257b;}
+input:focus, textarea:focus{border: 1px solid #e5257b;}
+a.emphasis:link, a.emphasis:visited{color:#e5257b;}
+
+/*------------------------------------------------------------*
+ ~Footer Information~
+**------------------------------------------------------------*/
+#logo {background-image: url("../img/themes/pink/logo.png");}
+
+/*------------------------------------------------------------*
+ ~Tab Information~
+**------------------------------------------------------------*/
+.tab-nav li a{color: #e5257b;}
+.tab-nav li a:hover{background: #e5257b none repeat scroll 0 0; border-color: #e5257b;}
+.tab-nav li.selected a, .tab-nav li.selected a:hover{color: #e5257b;}
+
+/*------------------------------------------------------------*
+ ~Group Information~
+**------------------------------------------------------------*/
+.myGroupRow.selected{background: #e5257b;}
+.myGroupRow.selected a, .myGroupRow.selected a:visited, .myGroupRow.selected a:hover{color: #fff; font-weight:bold; padding-left:5px;}
+
+/*------------------------------------------------------------*
+ ~Button Information~
+**------------------------------------------------------------*/
+a.btn {color:#e5257b;}

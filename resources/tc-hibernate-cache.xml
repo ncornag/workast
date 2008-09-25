@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<terracotta-hibernate-cache-configuration> 
+   <default-configuration> 
+     <logging>true</logging> 
+     <time-to-idle-seconds>60</time-to-idle-seconds> 
+     <time-to-live-seconds>120</time-to-live-seconds> 
+     <!--
+     <target-max-in-memory-count>0</target-max-in-memory-count>
+     <target-max-total-count>0</target-max-total-count>
+      -->
+    </default-configuration>
+
+    <environment-settings>
+        <url>file:///work/workspace/workast/tools/terracotta/tc-config.xml</url>
+    <!-- 
+        <tc-config>
+            <clients>
+                <logs>%(user.home)/terracotta/client-logs</logs>        
+            </clients>
+        </tc-config>
+     -->
+    </environment-settings>
+
+</terracotta-hibernate-cache-configuration>

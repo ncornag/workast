@@ -3,14 +3,16 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="resources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jrockit-R27.5.0-jdk1.6.0_03"/>
 	<classpathentry kind="con" path="org.eclipse.jst.server.core.container/org.eclipse.jst.server.tomcat.runtimeTarget/Apache Tomcat v6.0"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
-	<classpathentry kind="lib" path="lib/provided/com.springsource.javax.servlet.jar"/>
 	<classpathentry kind="lib" path="lib/test/com.springsource.org.apache.commons.logging.jar"/>
 	<classpathentry kind="lib" path="lib/test/com.springsource.org.easymock.jar"/>
 	<classpathentry kind="lib" path="lib/test/com.springsource.org.junit.jar"/>
 	<classpathentry kind="lib" path="lib/test/org.springframework.test.jar"/>
+	<classpathentry kind="lib" path="lib/provided/com.springsource.javax.servlet.jar"/>
+	<classpathentry kind="lib" path="lib/test/dbunit.jar"/>
+	<classpathentry kind="lib" path="tools/tomcat/endorsed/jaxb-api-2.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jrockit-R27.5.0-jdk1.6.0_03"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

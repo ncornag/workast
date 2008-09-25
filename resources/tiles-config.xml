@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 2.0//EN"
+       "http://struts.apache.org/dtds/tiles-config_2_0.dtd">
+
+<tiles-definitions>
+
+    <!-- Tabbed Forms -->
+    <definition name="userspaceTabbedFormsLayout" template="/WEB-INF/jsp/forms/tabbedForms.jsp">
+        <put-attribute name="form1" value="/WEB-INF/jsp/forms/statusForm.jsp" />
+        <put-attribute name="form2" value="/WEB-INF/jsp/forms/eventForm.jsp" />
+    </definition>
+
+    <!-- Stream Content -->
+    <definition name="streamContent" template="/WEB-INF/jsp/stream/streamContent.jsp">
+        <put-attribute name="contentFilter" value="/WEB-INF/jsp/stream/tagsFilter.jsp" />
+        <put-attribute name="streamTemplates" value="/WEB-INF/jsp/stream/streamTemplates.jsp" />
+        <put-attribute name="contentFooter" value="/WEB-INF/jsp/stream/streamFooter.jsp" />
+    </definition>
+
+    <definition name="myStreamContent" extends="streamContent">
+        <put-attribute name="contentData" value="/WEB-INF/jsp/stream/myStreamContent.jsp" />
+    </definition>
+
+    <definition name="profileContent" extends="streamContent" >
+        <put-attribute name="contentData" value="/WEB-INF/jsp/stream/profileStreamContent.jsp" />
+    </definition>
+
+    <definition name="groupContent" extends="streamContent" >
+        <put-attribute name="contentData" value="/WEB-INF/jsp/stream/groupStreamContent.jsp" />
+    </definition>
+
+    <definition name="globalContent" extends="streamContent" >
+        <put-attribute name="contentData" value="/WEB-INF/jsp/stream/globalStreamContent.jsp" />
+    </definition>
+
+    <!-- Main Layout -->
+    <definition name="mainLayout" template="/WEB-INF/jsp/layouts/main.jsp">
+        <put-attribute name="main.js" value="/WEB-INF/jsp/js/main.js.jsp" />
+        <put-attribute name="top" value="/WEB-INF/jsp/layouts/topBar.jsp" />
+        <put-attribute name="footer" value="/WEB-INF/jsp/layouts/footer.jsp" />
+    </definition>
+    
+    <!-- Default: activities forms + streams -->
+    <definition name="default" extends="mainLayout">
+        <put-attribute name="nav" value="/WEB-INF/jsp/layouts/navigation.jsp" />
+        <put-attribute name="topLeft" value="userspaceTabbedFormsLayout" />
+        <put-attribute name="topRight" value="/WEB-INF/jsp/layouts/currentStatus.jsp" />
+    </definition>
+    
+    <!-- Streams -->
+    <definition name="stream/mystream" extends="default">
+        <put-attribute name="mainLeft" value="myStreamContent" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/tag/tagCloud.jsp" />
+        <put-attribute name="mainRight2" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+
+    <definition name="stream/global" extends="default">
+        <put-attribute name="mainLeft" value="globalContent" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/tag/tagCloud.jsp" />
+        <put-attribute name="mainRight2" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+
+    <definition name="profile/show" extends="default">
+        <put-attribute name="mainLeft" value="profileContent" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/profile/profileInfo.jsp" />
+        <put-attribute name="mainRight2" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+    
+    <definition name="profile/edit" extends="mainLayout">
+        <put-attribute name="nav" value="/WEB-INF/jsp/layouts/navigation.jsp" />
+        <put-attribute name="topRight" value="/WEB-INF/jsp/layouts/currentStatus.jsp" />
+        <put-attribute name="mainLeft" value="/WEB-INF/jsp/profile/profileEdit.jsp" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/profile/profileInfo.jsp" />
+    </definition>
+    
+    <definition name="profile/net" extends="mainLayout">
+        <put-attribute name="nav" value="/WEB-INF/jsp/layouts/navigation.jsp" />
+        <put-attribute name="topRight" value="/WEB-INF/jsp/layouts/currentStatus.jsp" />
+        <put-attribute name="mainLeft" value="/WEB-INF/jsp/profile/profileNet.jsp" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/profile/profileInfo.jsp" />
+    </definition>
+    
+    <definition name="group/show" extends="default">
+        <put-attribute name="mainLeft" value="groupContent" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/tag/tagCloud.jsp" />
+        <put-attribute name="mainRight2" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+    
+    <!-- Groups List -->
+    <definition name="group/list" extends="mainLayout">
+        <put-attribute name="nav" value="/WEB-INF/jsp/layouts/navigation.jsp" />
+        <put-attribute name="topRight" value="/WEB-INF/jsp/layouts/currentStatus.jsp" />
+        <put-attribute name="mainLeft" value="/WEB-INF/jsp/groups/groupsList.jsp" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+
+    <!-- Group Create -->
+    <definition name="group/new" extends="mainLayout">
+        <put-attribute name="nav" value="/WEB-INF/jsp/layouts/navigation.jsp" />
+        <put-attribute name="topRight" value="/WEB-INF/jsp/layouts/currentStatus.jsp" />
+        <put-attribute name="mainLeft" value="/WEB-INF/jsp/groups/groupCreate.jsp" />
+        <put-attribute name="mainRight" value="/WEB-INF/jsp/groups/groupCloud.jsp" />
+    </definition>
+
+    <!-- Login -->    
+    <definition name="login" extends="mainLayout">
+        <put-attribute name="top" value="/WEB-INF/jsp/layouts/top.jsp" />
+        <put-attribute name="topLeft" value="/WEB-INF/jsp/forms/loginForm.jsp" />
+    </definition>
+    
+    <!-- Signup -->    
+    <definition name="signup" extends="mainLayout">
+        <put-attribute name="top" value="/WEB-INF/jsp/layouts/top.jsp" />
+        <put-attribute name="topLeft" value="/WEB-INF/jsp/forms/signupForm.jsp" />
+    </definition>
+
+    <!-- Forgot password -->
+    <definition name="forgotPassword" extends="mainLayout">
+        <put-attribute name="top" value="/WEB-INF/jsp/layouts/top.jsp"/>
+        <put-attribute name="topLeft" value="/WEB-INF/jsp/forms/forgotPassword.jsp"/>
+    </definition>
+
+    <definition name="recoverLostPassword" extends="mainLayout">
+        <put-attribute name="top" value="/WEB-INF/jsp/layouts/top.jsp"/>
+        <put-attribute name="topLeft" value="/WEB-INF/jsp/forms/recoverLostPassword.jsp"/>
+    </definition>
+
+</tiles-definitions>

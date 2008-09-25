@@ -1,21 +1,14 @@
 <project name="workast" default="" xmlns:ivy="antlib:org.apache.ivy.ant">
 
-    <property file="${user.home}/build.properties"/>  <!-- propiedades del usuario --> 
+    <property file="${user.home}/.workast/build.properties"/> <!-- propiedades del usuario -->
     <property file="build.properties"/>   		      <!-- propiedades por defecto -->
     
     <echo>Local repo: ${ivy.local.root}</echo>
     <echo>Shared repo: ${ivy.shared.root}</echo>
     
-    <target name="load-ivy">
-        <path id="ivy.lib.path">
-            <fileset dir="./${ivy.jar.dir}" includes="*.jar" />
-        </path>
-        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
-        <ivy:settings file="ivysettings.xml" override="true" />
-    </target>
-    
     <path id="lib.path.id">
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
+        <fileset dir="${compile.lib.dir}" includes="**/*.jar"/>
     </path>
     <path id="junit.path.id">
         <fileset dir="${project.dir}/lib/test" includes="**/*.jar"/>
@@ -29,13 +22,27 @@
         <pathelement location="${src.dir}"/>
         <path refid="lib.path.id"/>
     </path>
-    
+
     <!-- ================================= 
-          target: unpack-extJS              
+          target: load IVY                  
          ================================= -->
-    <target name="unpack-extJS" description="--> unpack extJS.rar in WebContent/js">
-        <unzip src="${project.dir}/tools/extjs/extjs.zip" dest="${project.dir}/WebContent/js"/>
-	</target>
+    <target name="init-ivy">
+        <available property="ivy.installed" value="true" file="${ivy.jar.file}" type="file"/>
+    </target>
+
+    <target name="download-ivy" depends="init-ivy" unless="ivy.installed">
+        <mkdir dir="${ivy.jar.dir}"/>
+        <echo message="Installing Ivy..."/>
+        <get src="${central.repo}/org/apache/ivy/ivy/${ivy.install.version}/ivy-${ivy.install.version}.jar" dest="${ivy.jar.file}"/>
+    </target>
+    
+    <target name="load-ivy" depends="init-ivy,download-ivy">
+        <path id="ivy.lib.path">
+            <fileset dir="./${ivy.jar.dir}" includes="*.jar" />
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+        <ivy:settings file="ivysettings.xml" />
+    </target>
     
     <!-- ================================= 
           target: resolve              
@@ -49,7 +56,15 @@
         <ivy:retrieve pattern="${lib.dir}/${lib.pattern}" conf="${lib.conf}" />
         <ivy:retrieve pattern="${compile.lib.dir}/${compile.lib.pattern}" conf="${compile.lib.conf}" />
     </target>
-    
+
+    <!-- =====================================
+           target: resolve extra Ant Tasks
+         ====================================== -->
+         
+    <target name="resolve-extra-tasks" depends="load-ivy" description="--> resolve extra ant tasks">
+        <ivy:resolve file="${basedir}/ivy-internal.xml"/>
+        <ivy:retrieve pattern="${ant.extras.lib.dir}/${ant.extras.lib.pattern}" conf="${ant.extras.lib.conf}"/>
+    </target>
     <!-- ================================= 
           target: report              
          ================================= -->
@@ -97,24 +112,26 @@
     <target name="compile" depends="resolve" description="--> compile the project">
         <mkdir dir="${classes.dir}" />
         <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="lib.path.id" debug="true"/>
+        <copy todir="${classes.dir}">
+            <fileset dir="${resources.dir}"/>
+        </copy>
     </target>
 
     <!-- ================================= 
-          target: jar              
+          target: war                      depends="version, compile" 
          ================================= -->
-    <target name="jar" depends="version, compile" description="--> make the jar file for this module">
-        <jar destfile="${jar.file}">
-            <fileset dir="${classes.dir}"  />
-            <fileset dir="${resources.dir}" />
-            <fileset dir="${web.dir}" />
-            <fileset dir="${src.dir}" >
-                <exclude name="**/*.java"/>
+    <target name="war" depends="compile" description="--> make the war file for this module">
+        <war destfile="${war.file}" webxml="${web.dir}/WEB-INF/web.xml" >
+            <fileset dir="${web.dir}">
+                <exclude name="WEB-INF/classes/**" />
             </fileset>
+            <classes dir="${classes.dir}"/>
+            <classes dir="${resources.dir}"/>
             <manifest>
                 <attribute name="Built-By" value="${user.name}" />
                 <attribute name="Build-Version" value="${version}" />
             </manifest>
-        </jar>
+        </war>
     </target>
 
     <!-- ================================= 
@@ -128,29 +145,6 @@
 	            <path refid="lib.path.id"/>
 	    	</classpath>
 	    </javac>
-    </target>
-
-    <!-- ================================= 
-          target: publish              
-         ================================= -->
-    <target name="publish" depends="clean-build, jar" description="--> publish this project in the ivy repository">
-        <ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" resolver="shared" pubrevision="${version}" status="release" />
-        <echo message="project ${ant.project.name} released with version ${version}" />
-    </target>
-
-    <!-- ================================= 
-          target: publish-local              
-         ================================= -->
-    <target name="publish-local" depends="local-version, jar" description="--> publish this project in the local ivy repository">
-        <ivy:publish artifactspattern="${build.dir}/[artifact].[ext]" resolver="local" pubrevision="${version}" pubdate="${now}" status="integration" forcedeliver="true" />
-        <echo message="project ${ant.project.name} published locally with version ${version}" />
-    </target>
-
-    <!-- ================================= 
-          target: clean-local              
-         ================================= -->
-    <target name="clean-local" description="--> cleans the local repository for the current module">
-        <delete dir="${ivy.local.root}/${ant.project.name}" />
     </target>
 
     <!-- ================================= 
@@ -177,6 +171,7 @@
     <target name="clean-build" description="--> clean the project built files">
         <mkdir dir="${build.dir}"/>
         <delete includeemptydirs="true" dir="${build.dir}" />
+        <delete includeemptydirs="true" dir="${classes.dir}" />
     </target>
 
     <!-- ================================= 
@@ -270,5 +265,28 @@
             </junitreport>
         </sequential>
     </macrodef>
-    
+
+<!--
+    Deploy to local container
+-->
+    <target name="deployToLocalTomcat" depends="war, resolve-extra-tasks">
+        <taskdef resource="org/apache/catalina/ant/antlib.xml" classpath="${deployer.jar.file}"/>
+        <deploy url="${tomcat.manager.url}"
+                username="${tomcat.username}"
+                password="${tomcat.password}"
+                path="/${ant.project.name}"
+                war="file:${war.file}"/>
+    </target>
+
+    <target name="undeployFromLocalTomcat" depends="resolve-extra-tasks">
+        <taskdef resource="org/apache/catalina/ant/antlib.xml" classpath="${deployer.jar.file}"/>
+        <undeploy url="${tomcat.manager.url}"
+                  username="${tomcat.username}"
+                  password="${tomcat.password}"
+                  path="/${ant.project.name}"/>
+    </target>
+
+    <target name="redeployFromLocalTomcat" depends="undeployFromLocalTomcat,deployToLocalTomcat">
+        <echo message="Redeploy"/>
+    </target>
 </project>

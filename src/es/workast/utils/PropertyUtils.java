@@ -17,7 +17,7 @@ public class PropertyUtils {
         return properties;
     }
 
-    @Resource
+    @Resource(name = "appProperties")
     public void setAppProperties(Properties appProperties) {
         properties = appProperties;
     }

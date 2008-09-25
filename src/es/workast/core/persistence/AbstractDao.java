@@ -8,24 +8,24 @@ import java.util.List;
  */
 public interface AbstractDao<DomainObject extends Serializable, KeyType extends Serializable> {
 
-    public DomainObject get(KeyType id);
+    DomainObject get(KeyType id);
 
-    public DomainObject load(KeyType id);
+    DomainObject load(KeyType id);
 
-    public void update(DomainObject object);
+    void update(DomainObject object);
 
-    public void addUpdate(DomainObject t);
+    void addUpdate(DomainObject t);
 
-    public KeyType save(DomainObject object);
+    KeyType save(DomainObject object);
 
-    public void saveOrUpdate(DomainObject object);
+    void saveOrUpdate(DomainObject object);
 
-    public void delete(DomainObject object);
+    void delete(DomainObject object);
 
-    public void deleteById(KeyType id);
+    void deleteById(KeyType id);
 
-    public List<DomainObject> findAll(boolean cacheable);
+    List<DomainObject> findAll(boolean cacheable);
 
-    public List<DomainObject> findAll();
+    List<DomainObject> findAll();
 
 }

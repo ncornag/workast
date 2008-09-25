@@ -2,23 +2,26 @@
 
     <settings defaultResolver="default" />
     
-    <caches resolutionCacheDir="${ivy.cache.dir}/resolution" repositoryCacheDir="${ivy.cache.dir}/repository"
+    <!-- Problems with Ivy 2.0.0-rc2 and variables in resolutionCacheDir/repositoryCacheDir -->
+    <caches defaultCacheDir="${user.home}/.ivy2/cache" resolutionCacheDir="${user.home}/.ivy2/cache/resolution" repositoryCacheDir="${user.home}/.ivy2/cache/repository"
         ivyPattern="${ivy.default.pattern}"
         artifactPattern="${ivy.default.pattern}" />
 
     <resolvers>
-        <!-- spring --> 
+        <!-- project --> 
         <chain name="project">
             <!-- local repository -->
             <filesystem name="local">
-                <ivy pattern="${ivy.local.root}/repository/${ivy.default.pattern}" />
-                <artifact pattern="${ivy.local.root}/repository/${ivy.default.pattern}" />
+                <ivy pattern="${local.repo}/repository/${ivy.default.pattern}" />
+                <artifact pattern="${local.repo}/repository/${ivy.default.pattern}" />
             </filesystem>
         	<!-- shared repository -->
+                <!--
             <filesystem name="shared">
-                <ivy pattern="${ivy.shared.root}/repository/${ivy.default.pattern}" />
-                <artifact pattern="${ivy.shared.root}/repository/${ivy.default.pattern}" />
+                <ivy pattern="${shared.repo}/repository/${ivy.default.pattern}" />
+                <artifact pattern="${shared.repo}/repository/${ivy.default.pattern}" />
             </filesystem>
+            -->
         </chain>
         
         <!-- spring --> 
@@ -33,26 +36,26 @@
                 <ivy pattern="http://repository.springsource.com/ivy/bundles/external/${ivy.default.pattern}" />
                 <artifact pattern="http://repository.springsource.com/ivy/bundles/external/${ivy.default.pattern}" />
             </url>
+        
+            <!-- Main Spring maven repository --> 
+            <ibiblio name="spring.milestone" m2compatible="true" root="http://repository.springsource.com/maven/bundles/milestone" />
+            <ibiblio name="spring.release" m2compatible="true" root="http://repository.springsource.com/maven/bundles/release" />
+            <ibiblio name="spring.external" m2compatible="true" root="http://repository.springsource.com/maven/bundles/external" />
+            
         </chain>
 
         <!-- public -->
         <chain name="public">
-            <ibiblio name="apache" m2compatible="true" root="http://repo1.maven.org/maven2" />
+            <ibiblio name="apache" m2compatible="true" root="${central.repo}" />
             <ibiblio name="jboss" m2compatible="true" root="http://repository.jboss.org/maven2" />
             <ibiblio name="java.net" root="http://download.java.net/maven/1/"
                      pattern="[organization]/jars/[module]-[revision].[ext]" />
-            <!-- 
-            <ibiblio name="ibiblio-maven2" m2compatible="true" root="http://www.ibiblio.org/maven2" />
-            <ibiblio name="org-ibiblio" m2compatible="false" root="http://www.ibiblio.org/maven2/org/" pattern="[module]/[artifact]/[revision]/[artifact]-[revision].[ext]" />
-             -->
+            <ibiblio name="java.net2" m2compatible="true" root="http://download.java.net/maven/2" />
+            <ibiblio name="intalio" m2compatible="true" root="http://www.intalio.org/public/maven2" />
         </chain>
         
         <!-- Scannotation own repository -->
         <ibiblio name="scannotationresolver" m2compatible="true" root="http://scannotation.sf.net/maven2"/>
-        <!-- 
-        <ibiblio name="scannotationresolver" root="http://repo1.maven.org/maven2"
-                 pattern="net/sf/scannotation/[artifact]/[revision]/[module]-[revision].[ext]" />        
-         -->
         
         <chain name="default" returnFirst="true" >
             <resolver ref="project" />

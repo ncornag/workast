@@ -1,0 +1,56 @@
+@charset "utf-8";
+/* CSS Document */
+
+a:link {color: #869aae;	text-decoration: none;}
+a:visited {	text-decoration: none;	color: #869aae;}
+a:hover {	text-decoration: none;	color: #01a6e6;}
+a:active {	text-decoration: none;	color: #01a6e6;}
+
+/*------------------------------------------------------------*
+ ~Headings ~
+**------------------------------------------------------------*/
+h1{color: #01a6e6;}
+h2{color: #01a6e6;}
+h3{color: #01a6e6;}
+h4{color: #01a6e6;}
+
+/*------------------------------------------------------------*
+ ~main layout bits~
+**------------------------------------------------------------*/
+#top {background-color: #01a6e6;}
+#main_line {background-color: #01a6e6;}
+
+/*------------------------------------------------------------*
+ ~Tabbed Nav Information~
+**------------------------------------------------------------*/
+#nav li { background-color: #01a6e6;}
+
+/*------------------------------------------------------------*
+ ~ Content Information~
+**------------------------------------------------------------*/
+input, textarea{color: #01a6e6;}
+input:focus, textarea:focus{border: 1px solid #01a6e6;}
+a.emphasis:link, a.emphasis:visited{color:#01a6e6;}
+
+/*------------------------------------------------------------*
+ ~Footer Information~
+**------------------------------------------------------------*/
+#logo {background-image: url(../img/themes/blue/logo.png);}
+
+/*------------------------------------------------------------*
+ ~Tab Information~
+**------------------------------------------------------------*/
+div.tab-nav ul.tab-nav li a{color: #01a6e6;}
+div.tab-nav ul.tab-nav li a:hover{background: #01a6e6 none repeat scroll 0 0; border-color: #01a6e6;}
+div.tab-nav ul.tab-nav li.selected a, .tab-nav ul.tab-nav li.selected a:hover{color: #01a6e6;}
+
+/*------------------------------------------------------------*
+ ~Group Information~
+**------------------------------------------------------------*/
+.myGroupRow.selected{background: #01a6e6;}
+.myGroupRow.selected a, .myGroupRow.selected a:visited, .myGroupRow.selected a:hover{color: #fff; font-weight:bold; padding-left:5px;}
+
+/*------------------------------------------------------------*
+ ~Button Information~
+**------------------------------------------------------------*/
+a.btn {color:#01a6e6;}

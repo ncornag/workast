@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[2.2.0.v200809261800]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[true]]></enableImports>
+	<configs>
+		<config>resources/persistence-config.xml</config>
+		<config>resources/security-config.xml</config>
+		<config>resources/application-config.xml</config>
+	</configs>
+	<configSets>
+		<configSet>
+			<name><![CDATA[All]]></name>
+			<allowBeanDefinitionOverriding>true</allowBeanDefinitionOverriding>
+			<incomplete>false</incomplete>
+			<configs>
+				<config>resources/persistence-config.xml</config>
+				<config>resources/security-config.xml</config>
+				<config>resources/application-config.xml</config>
+			</configs>
+		</configSet>
+	</configSets>
+</beansProjectDescription>

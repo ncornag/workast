@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import es.workast.person.Person;
-import es.workast.person.persistence.PersonDao;
+import es.workast.dao.person.PersonDao;
+import es.workast.model.person.Person;
 
 /**
  * TODO Documentar
@@ -18,7 +18,7 @@ import es.workast.person.persistence.PersonDao;
  * @author Nicolás Cornaglia
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:applicationContext.xml" })
+@ContextConfiguration(locations = { "classpath:application-config.xml" })
 public class PersonDaoTest {
 
     @Resource

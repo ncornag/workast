@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+		
+<!--  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd"		
+<hibernate-mapings>
+	<typedef name="es.capgemini.devon.dao.BlobStreamType" class="org.springframework.orm.hibernate3.support.AbstractLobType"/>
+</hibernate-mapings>
+-->
+		
+<hibernate-configuration>
+    <session-factory name="Test-Hibernate-Config">
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/?useUnicode=true&amp;characterEncoding=UTF-8</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.default_schema">workast</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
+        <property name="hibernate.cache.provider_class">org.hibernate.cache.EHCacheProvider</property>
+        
+        <mapping class="es.workast.model.activity.Activity"/>
+        <mapping class="es.workast.activity.ActivityParameter"/>
+        <mapping class="es.workast.comment.Comment"/>
+        <mapping class="es.workast.model.group.Group"/>
+        <mapping class="es.workast.model.person.Person"/>
+         
+    </session-factory>
+</hibernate-configuration>

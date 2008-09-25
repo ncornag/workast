@@ -11,6 +11,12 @@ import org.springframework.security.userdetails.UserDetails;
  */
 public class SecurityUtils {
 
+    /**
+     * Hidden constructor
+     */
+    private SecurityUtils() {
+    }
+
     /** 
      * Obtiene el usuario logado
      * 

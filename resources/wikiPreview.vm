@@ -1,0 +1,14 @@
+<html>
+<head>
+	<link href='/static/css/application.css' media='screen' rel='stylesheet' type='text/css' />
+	<link href='/static/css/blue.css' media='screen' rel='stylesheet' type='text/css' />
+	<link href='/static/css/defaults.css' media='screen' rel='stylesheet' type='text/css' />
+</head>
+<body class="wikiPreviewBody">
+	<div class='conversation_piece'>
+		<div class='title'>
+        	${htmlStr}
+        </div>
+    </div>
+</body>
+</html>
