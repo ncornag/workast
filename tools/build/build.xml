@@ -18,7 +18,7 @@
         <fileset dir="${lib.dir}" includes="**/*.jar"/>
     </path>
     <path id="junit.path.id">
-        <fileset dir="../junit" includes="**/*.jar"/>
+        <fileset dir="${project.dir}/lib/test" includes="**/*.jar"/>
     </path>
     <path id="test.path.id">
         <pathelement location="${test.classes.dir}" />
@@ -29,6 +29,13 @@
         <pathelement location="${src.dir}"/>
         <path refid="lib.path.id"/>
     </path>
+    
+    <!-- ================================= 
+          target: unpack-extJS              
+         ================================= -->
+    <target name="unpack-extJS" description="--> unpack extJS.rar in WebContent/js">
+        <unzip src="${project.dir}/tools/extjs/extjs.zip" dest="${project.dir}/WebContent/js"/>
+	</target>
     
     <!-- ================================= 
           target: resolve              

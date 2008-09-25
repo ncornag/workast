@@ -89,9 +89,10 @@
 
         <!-- test-time only dependencies -->
         <dependency org="org.junit" name="com.springsource.org.junit" rev="4.4.0" conf="test->runtime" />
+        <dependency org="org.apache.ant" name="ant-junit" rev="1.7.1" conf="test->master" />
         <dependency org="org.easymock" name="com.springsource.org.easymock" rev="2.3.0" conf="test->runtime"/>
         <dependency org="org.springframework" name="org.springframework.test" rev="2.5.5.A" conf="test->runtime"/>
-        <!-- Selenium!
+        <!-- Selenium
         <dependency org="com.thoughtworks" name="com.thoughtworks.selenium" rev="0.9.2" conf="test->runtime"/>
          -->
 
